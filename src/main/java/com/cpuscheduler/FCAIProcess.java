@@ -13,6 +13,7 @@ public class FCAIProcess extends Process {
     public int getQuantum() {return quantum;}
     public void setQuantum(int quantum) {this.quantum = quantum;}
     public double getFCAIFactor() {return FCAIFactor;}
+    public void setFCAIFactor(double FCAIFactor) {this.FCAIFactor = FCAIFactor;}
 
     public void updateQuantum(int executedTime) {
         if (getRemainingBurstTime() > 0) {
