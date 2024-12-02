@@ -1,11 +1,11 @@
 package com.cpuscheduler;
 //Process class to store process data
 public class Process {
-    private String name;
-    private String color;
-    private int arrivalTime;
-    private int burstTime;
-    private int priority;
+    private final String name;
+    private final String color;
+    private final int arrivalTime;
+    private final int burstTime;
+    private final int priority;
     private int remainingBurstTime;
     private int waitingTime;
     private int turnaroundTime;
@@ -30,4 +30,5 @@ public class Process {
     public void setTurnaroundTime(int turnaroundTime) { this.turnaroundTime = turnaroundTime; }
     public int getWaitingTime() { return waitingTime; }
     public int getTurnaroundTime() { return turnaroundTime; }
+    public String getColor() { return color; }
 }
