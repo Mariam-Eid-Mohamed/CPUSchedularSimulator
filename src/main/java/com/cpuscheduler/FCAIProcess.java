@@ -2,6 +2,8 @@ package com.cpuscheduler;
 
 public class FCAIProcess extends Process {
     private int quantum;
+    private double V1;
+    private double V2;
     private double FCAIFactor;
 
     public FCAIProcess(String name, String color, int arrivalTime, int burstTime, int priority, int quantum) {
@@ -26,4 +28,6 @@ public class FCAIProcess extends Process {
     public void updateFCAIFactor(double V1, double V2) {
         FCAIFactor = Math.ceil((10 - getPriority()) + (getArrivalTime() / V1) + (getRemainingBurstTime() / V2));
     }
+    public void setV1(double v1) {V1 = v1;}
+    public void setV2(double v2) {V2 = v2;}
 }
