@@ -24,6 +24,6 @@ public class FCAIProcess extends Process {
         }
     }
     public void updateFCAIFactor(double V1, double V2) {
-        FCAIFactor = (10 - getPriority()) + (getArrivalTime() / V1) + (getRemainingBurstTime() / V2);
+        FCAIFactor = Math.ceil((10 - getPriority()) + (getArrivalTime() / V1) + (getRemainingBurstTime() / V2));
     }
 }
