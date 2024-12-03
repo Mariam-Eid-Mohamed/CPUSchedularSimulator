@@ -25,8 +25,6 @@ public class FCAIScheduler {
     public static void updateFCAIFactor(double V1, double V2, List<FCAIProcess> processes) {
         // set V1 & V2 and then updating the FCAI factor
         for (FCAIProcess process: processes) {
-            process.setV1(V1);
-            process.setV2(V2);
             process.updateFCAIFactor(V1,V2);
         }
     }
