@@ -12,7 +12,35 @@ public class FCAIScheduler {
         calculateV1V2();
     }
     public void schedule() {
-        
+        int currentTime = 0;
+        PriorityQueue<FCAIProcess> readyQueue = new PriorityQueue<>(Comparator.comparingDouble(FCAIProcess::getFCAIFactor));
+
+        for (FCAIProcess process : processes) {
+            process.updateFCAIFactor(V1, V2);
+        }
+
+        while (!processes.isEmpty() || !readyQueue.isEmpty()) {
+            // Add processes that have arrived to the queue
+            Iterator<FCAIProcess> iterator = processes.iterator();
+            while (iterator.hasNext()) {
+                FCAIProcess process = iterator.next();
+                if (process.getArrivalTime() <= currentTime) {
+                    readyQueue.add(process);
+                    iterator.remove();
+                }
+            }
+
+            if (readyQueue.isEmpty()) {
+                currentTime++; 
+                continue;
+            }
+
+            FCAIProcess currentProcess = readyQueue.poll();
+            int quantum = currentProcess.getQuantum();
+            int executionTime = (int) Math.ceil(0.4 * quantum);
+            // if the remaining burst time less than the amount 40% of quantum then we will execute the remaining burst time
+            if (currentProcess.getRemainingBurstTime() < executionTime)
+                executionTime = currentProcess.getRemainingBurstTime();
     }
     public void calculateV1V2() {
         // Find the maximum arrival time and maximum burst time among all processes
