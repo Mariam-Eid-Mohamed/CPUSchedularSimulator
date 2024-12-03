@@ -35,6 +35,6 @@ public class Main {
         // After collecting processes, call the scheduling algorithms
         // Example: Call Priority Scheduling
         PriorityScheduler scheduler = new PriorityScheduler();
-//        scheduler.schedule(processes);
+        scheduler.schedule(processes);
     }
 }
