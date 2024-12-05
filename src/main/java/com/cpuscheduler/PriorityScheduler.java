@@ -30,7 +30,7 @@ public class PriorityScheduler {
                     readyQueue.add(process);
                     process.setScheduled(true); // Mark the process as added to the ready queue
                 }
-        }
+            }
             if (readyQueue.isEmpty()) {
                 currentTime++;
                 continue;
