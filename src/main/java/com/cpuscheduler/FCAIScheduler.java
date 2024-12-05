@@ -1,46 +1,132 @@
 package com.cpuscheduler;
 import java.util.List;
+import java.util.*;
 
+
+// Not the final version
 public class FCAIScheduler {
-    // Initialize Processes
+    private int startTime, curTime, executionTime;
     private final List<FCAIProcess> processes;
-    private double V1; // Last arrival time / 10
-    private double V2; // Max burst time / 10
+    private FCAIProcess tempP = null;
+    private double V1, V2;
+    private final PriorityQueue<FCAIProcess> readyQueue = new PriorityQueue<>(
+            Comparator.comparingDouble(FCAIProcess::getFCAIFactor)
+                    .thenComparing(Comparator.comparingInt(FCAIProcess::getPriority).reversed())
+    );
 
     public FCAIScheduler(List<FCAIProcess> processes) {
         this.processes = processes;
+        startTime = 0; curTime = 0; executionTime = 0;
         calculateV1V2();
+        updateFCAIFactor();
+    }
+
+    public void updateReadyQueue() {
+        // Add processes that have arrived to the queue
+        for (FCAIProcess p : new ArrayList<>(processes)) {
+            if (p.getArrivalTime() <= curTime) {
+                readyQueue.add(p);
+                processes.remove(p);
+            }
+        }
+    }
+    public void displayExecutedProcess(FCAIProcess p, FCAIProcess prvP, boolean preempted) {
+        // Remaining burst time if no then it mean the process has been completed
+        boolean noRBT = p.isCompleted;
+
+
+        System.out.print(startTime + "-" + curTime + "  " + p.getName() + "  " + executionTime + "  " +
+                p.getRemainingBurstTime() + "  " + (noRBT ? "Completed" : p.prvQuantum + "->" + p.getQuantum()) + "  "
+                + p.getPriority() + "  " + (noRBT ? "Completed" : p.prvFCAIFactor + "->" + p.getFCAIFactor()) + "  ");
+
+        if (!preempted || prvP == null)
+            System.out.print(p.getName() + " starts execution, runs for " + executionTime +
+                    " units, remaining burst = " + p.getRemainingBurstTime());
+        else
+            System.out.print(p.getName() + " preempts " + prvP.getName() + " starts execution, runs for " +
+                    executionTime + " units, remaining burst = " + p.getRemainingBurstTime());
+        System.out.println("\n______________________________________________________________________________________");
     }
     public void schedule() {
-        int currentTime = 0;
-        PriorityQueue<FCAIProcess> readyQueue = new PriorityQueue<>(Comparator.comparingDouble(FCAIProcess::getFCAIFactor));
+        FCAIProcess curProcess, prvProcess = null, prvPrev = null;
 
-        for (FCAIProcess process : processes) {
-            process.updateFCAIFactor(V1, V2);
-        }
+        int quantum, tempQuantum = 0;
 
-        while (!processes.isEmpty() || !readyQueue.isEmpty()) {
-            // Add processes that have arrived to the queue
-            Iterator<FCAIProcess> iterator = processes.iterator();
-            while (iterator.hasNext()) {
-                FCAIProcess process = iterator.next();
-                if (process.getArrivalTime() <= currentTime) {
-                    readyQueue.add(process);
-                    iterator.remove();
+        System.out.println("Time Process - Executed Time - Remaining Burst Time - "
+                + "Updated Quantum - Priority FCAI Factor"+ "  " + "Action Details");
+
+        while (!processes.isEmpty() || !readyQueue.isEmpty() || tempP != null) {
+            updateReadyQueue();
+            if (readyQueue.isEmpty()) {
+                if (tempP == null) {
+                    curTime++;
+                    continue;
+                }
+                else checkTemp();
+            }
+
+            curProcess = readyQueue.poll();
+            if (curProcess == null) break;
+            if (tempP != null && !tempP.isCompleted) {
+                readyQueue.add(tempP);
+                tempP = null;
+            }
+
+            // if the process still executed
+            if (curProcess == prvProcess) {
+                if (tempQuantum > 0 && !curProcess.isCompleted) {
+                    prvProcess = prvPrev;
+                    curProcess.decrementRBT(1);
+                    executionTime++; tempQuantum--; curTime++;
+                }
+                else {
+                    prvProcess.prvFCAIFactor = prvProcess.getFCAIFactor();
+                    prvProcess.updateQuantum(executionTime);
+                    prvProcess.updateFCAIFactor(V1, V2);
+                    displayExecutedProcess(prvProcess, prvPrev, true);
+                    startTime = curTime;
+                    prvProcess = null;
+                    tempP = curProcess;
+                    continue;
                 }
             }
+            else {
+                if (prvProcess != null) {
+                    boolean isPreempted = tempQuantum > 0 || !prvProcess.isCompleted;
+                    prvProcess.prvFCAIFactor = prvProcess.getFCAIFactor();
+                    prvProcess.updateQuantum(executionTime);
+                    prvProcess.updateFCAIFactor(V1, V2);
+                    displayExecutedProcess(prvProcess, prvPrev, isPreempted);
+                }
+                startTime = curTime;
+                quantum = curProcess.getQuantum();
+                tempQuantum = quantum;
+                executionTime = (int) Math.ceil(0.4 * quantum);
 
-            if (readyQueue.isEmpty()) {
-                currentTime++; 
-                continue;
+                // if the remaining burst time less than the amount 40% of quantum then we will execute the remaining burst time
+                if (curProcess.getRemainingBurstTime() < executionTime) {
+                    executionTime = curProcess.getRemainingBurstTime();
+                    curTime += executionTime;
+                    curProcess.decrementRBT(curProcess.getRemainingBurstTime());
+                    displayExecutedProcess(curProcess, prvProcess, false);
+                    continue;  // Continue to the next process
+                }
+                tempQuantum -= executionTime;
+                curTime += executionTime;
+                curProcess.decrementRBT(executionTime);
             }
 
-            FCAIProcess currentProcess = readyQueue.poll();
-            int quantum = currentProcess.getQuantum();
-            int executionTime = (int) Math.ceil(0.4 * quantum);
-            // if the remaining burst time less than the amount 40% of quantum then we will execute the remaining burst time
-            if (currentProcess.getRemainingBurstTime() < executionTime)
-                executionTime = currentProcess.getRemainingBurstTime();
+            readyQueue.add(curProcess);
+
+            prvPrev = prvProcess;
+            prvProcess = curProcess;
+        }
+    }
+    public void checkTemp() {
+        if (tempP != null && !tempP.isCompleted) {
+            readyQueue.add(tempP);
+            tempP = null;
+        }
     }
     public void calculateV1V2() {
         // Find the maximum arrival time and maximum burst time among all processes
@@ -56,7 +142,7 @@ public class FCAIScheduler {
         V1 = (double) maxArrivalTime / 10;
         V2 = (double) maxRemainingBurstTime / 10;
     }
-    public static void updateFCAIFactor(double V1, double V2, List<FCAIProcess> processes) {
+    public void updateFCAIFactor() {
         for (FCAIProcess process: processes)
             process.updateFCAIFactor(V1, V2);
     }
@@ -65,4 +151,5 @@ public class FCAIScheduler {
             System.out.println("Process " + process.getName() + ": " + process.getFCAIFactor());
         System.out.println("______________________________________________________________________________________");
     }
+
 }
