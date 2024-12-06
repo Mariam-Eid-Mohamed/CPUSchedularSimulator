@@ -151,5 +151,27 @@ public class FCAIScheduler {
             System.out.println("Process " + process.getName() + ": " + process.getFCAIFactor());
         System.out.println("______________________________________________________________________________________");
     }
+     private static void printResults(List<FCAIProcess> processes) {
+        int totalTurnaroundTime = 0;
+        int totalWaitingTime = 0;
+
+        System.out.println("processes\tCompletion\tTurnaround\tWaiting");
+        for (FCAIProcess process : processes) {
+            int turnaroundTime = process.completionTime - process.arrivalTime;
+            int waitingTime = turnaroundTime - process.burstTime;
+            totalTurnaroundTime += turnaroundTime;
+            totalWaitingTime += waitingTime;
+
+            System.out.println(process.id + "\t" + process.completionTime + "\t\t" + turnaroundTime + "\t\t" + waitingTime);
+        }
+
+        // Calculate averages
+        double averageTurnaroundTime = totalTurnaroundTime / (double) processes.size();
+        double averageWaitingTime = totalWaitingTime / (double) processes.size();
+
+        System.out.println("\nAverage Turnaround Time: " + averageTurnaroundTime);
+        System.out.println("Average Waiting Time: " + averageWaitingTime);
+    }
+
 
 }
