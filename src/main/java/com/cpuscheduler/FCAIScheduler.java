@@ -156,14 +156,14 @@ public class FCAIScheduler {
         int totalWaitingTime = 0;
 
         System.out.println("processes\tCompletion\tTurnaround\tWaiting");
-        for (FCAIProcess process : processes) {
-            int turnaroundTime = process.completionTime - process.arrivalTime;
-            int waitingTime = turnaroundTime - process.burstTime;
-            totalTurnaroundTime += turnaroundTime;
-            totalWaitingTime += waitingTime;
-
-            System.out.println(process.id + "\t" + process.completionTime + "\t\t" + turnaroundTime + "\t\t" + waitingTime);
-        }
+//        for (FCAIProcess process : processes) {
+//            int turnaroundTime = process.completionTime - process.arrivalTime;
+//            int waitingTime = turnaroundTime - process.burstTime;
+//            totalTurnaroundTime += turnaroundTime;
+//            totalWaitingTime += waitingTime;
+//
+//            System.out.println(process.id + "\t" + process.completionTime + "\t\t" + turnaroundTime + "\t\t" + waitingTime);
+//        }
 
         // Calculate averages
         double averageTurnaroundTime = totalTurnaroundTime / (double) processes.size();

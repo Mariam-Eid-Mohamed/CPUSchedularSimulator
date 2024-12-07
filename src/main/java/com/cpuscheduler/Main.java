@@ -11,6 +11,7 @@ public class Main {
         System.out.println("Enter number of processes: ");
         int numProcesses = sc.nextInt();
 
+
         // Create a list to store processes
         List<Process> processes = new ArrayList<>();
 

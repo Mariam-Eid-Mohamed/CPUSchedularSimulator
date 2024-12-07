@@ -1,8 +1,5 @@
 package com.cpuscheduler;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Arrays;
-import java.util.PriorityQueue;
+import java.util.*;
 
 // Priority Scheduling Algorithm
 //steps of implementation
@@ -14,7 +11,11 @@ import java.util.PriorityQueue;
 //   Execute the process to completion (non-preemptive).
 //4.Repeat until all processes are executed.
 public class PriorityScheduler {
+
     public void schedule (Process[] processes){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter context switching if any: ");
+        int contextSwitching = sc.nextInt();
         // Sort processes by arrival time initially
         Arrays.sort(processes, Comparator.comparingInt(Process::getArrivalTime));
         // Priority Queue to simulate the ready queue (sorted by priority and arrival time)
@@ -39,11 +40,12 @@ public class PriorityScheduler {
             Process currentProcess = readyQueue.poll();
             // Set start time and calculate completion time
             currentProcess.setStartTime(currentTime);
-            currentTime += currentProcess.getBurstTime();
+            currentTime += currentProcess.getBurstTime(); // Process execution time
             currentProcess.setCompletionTime(currentTime);
             // Calculate Turnaround Time (TAT) and Waiting Time (WT)
-            currentProcess.setTurnaroundTime(currentProcess.getCompletionTime() - currentProcess.getArrivalTime());
+            currentProcess.setTurnaroundTime((currentProcess.getCompletionTime() + contextSwitching) - currentProcess.getArrivalTime());
             currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
+            currentTime += contextSwitching;
             scheduledProcesses.add(currentProcess);
             CompletedProcess++;
 

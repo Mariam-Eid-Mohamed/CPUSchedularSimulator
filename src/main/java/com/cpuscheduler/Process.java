@@ -13,6 +13,7 @@ public class Process {
     private int turnaroundTime;
     private boolean isScheduled = false;
 
+
     // Constructor, getters and setters
     public Process(String name, String color, int arrivalTime, int burstTime, int priority) {
         this.name = name;
