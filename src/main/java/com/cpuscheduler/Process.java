@@ -3,7 +3,7 @@ package com.cpuscheduler;
 public class Process {
     private final String name;
     private final String color;
-    private final int arrivalTime;
+    private int arrivalTime = -1;
     private final int burstTime;
     private final int priority;
     private int remainingBurstTime;

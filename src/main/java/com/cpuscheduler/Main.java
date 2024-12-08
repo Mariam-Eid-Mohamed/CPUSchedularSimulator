@@ -37,6 +37,7 @@ public class Main {
         System.out.println("Choose a scheduling algorithm:");
         System.out.println("1. Priority Scheduling");
         System.out.println("2. Non-Preemptive Shortest Job First (SJF)");
+        System.out.println("3. SRTF Scheduling");
 
         int choice = sc.nextInt();
 
@@ -52,6 +53,10 @@ public class Main {
                 sjfScheduler.printSchedule();
                 break;
 
+            case 3:
+                SRTFScheduler srtfScheduler = new SRTFScheduler();
+                srtfScheduler.schedule(processes.toArray(new Process[0]));
+                break;
             default:
                 System.out.println("Invalid choice!");
                 break;

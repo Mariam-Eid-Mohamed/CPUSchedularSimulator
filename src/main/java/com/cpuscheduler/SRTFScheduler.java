@@ -1,11 +1,11 @@
 package com.cpuscheduler;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.Arrays;
+import java.util.*;
 
 public class SRTFScheduler {
     public void schedule(Process[] processes) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter context switching if any: ");
+        int contextSwitching = sc.nextInt();
         // Sort processes by arrival time initially
         Arrays.sort(processes, Comparator.comparingInt(Process::getArrivalTime));
 
@@ -43,8 +43,9 @@ public class SRTFScheduler {
             // If the process completes execution
             if (currentProcess.getRemainingBurstTime() == 0) {
                 currentProcess.setCompletionTime(currentTime);
-                currentProcess.setTurnaroundTime(currentProcess.getCompletionTime() - currentProcess.getArrivalTime());
+                currentProcess.setTurnaroundTime((currentProcess.getCompletionTime() + contextSwitching) - currentProcess.getArrivalTime());
                 currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
+                currentTime += contextSwitching;
                 scheduledProcesses.add(currentProcess);
                 completedProcesses++;
             } else {
@@ -59,7 +60,7 @@ public class SRTFScheduler {
 
     private void displayResults(ArrayList<Process> scheduledProcesses) {
         System.out.println("\nScheduled Processes:");
-        System.out.printf("%-10s%-10s%-10s%-10s%-10s%-10s%-10s\n",
+        System.out.printf("%-10s%-10s%-10s%-7s%-13s%-10s%-10s\n",
                 "Process", "Arrival", "Burst", "Start", "Completion", "TAT", "WT");
 
         int totalWaitingTime = 0;
