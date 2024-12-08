@@ -97,11 +97,11 @@ public class Main {
                 System.out.println("SRTF Scheduling selected.");
                 SRTFScheduler srtfScheduler = new SRTFScheduler();
                 srtfScheduler.schedule(processes.toArray(new Process[0]));
-
                 break;
             case 4:
                 System.out.println("FCAI Scheduling selected.");
                 FCAIScheduler fcaiScheduler = new FCAIScheduler(FCAIProcesses);
+                fcaiScheduler.schedule();
                 break;
             default:
                 System.out.println("Invalid choice!");
