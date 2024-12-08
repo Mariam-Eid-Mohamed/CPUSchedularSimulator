@@ -7,15 +7,13 @@ public class FCAIProcess extends Process {
     public int prvQuantum;
     public boolean isCompleted = false;
     public FCAIProcess(String name, String color,int burstTime, int arrivalTime, int priority, int quantum) {
-        super(name, color,burstTime, arrivalTime, priority); // Call to superclass constructor
+        super(name, color,arrivalTime, burstTime, priority); // Call to superclass constructor
         this.quantum = quantum;
         this.FCAIFactor = 0; // Initialize FCAIFactor to a default value
     }
 
     public int getQuantum() {return quantum;}
-    public void setQuantum(int quantum) {this.quantum = quantum;}
     public int getFCAIFactor() {return FCAIFactor;}
-    public void setFCAIFactor(int FCAIFactor) {this.FCAIFactor = FCAIFactor;}
     public void updateQuantum(int executedTime) {
         if (executedTime == quantum && getRemainingBurstTime() > 0)
             quantum += 2;
@@ -27,7 +25,7 @@ public class FCAIProcess extends Process {
     }
 
     public void decrementRBT(int val) {
-        setRemainingBurstTime(getRemainingBurstTime() - val);
+        setRemainingBurstTime((getRemainingBurstTime() - val));
         isCompleted = getRemainingBurstTime() <= 0;
     }
 
