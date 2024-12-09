@@ -93,11 +93,10 @@ public class SRTFGUI extends JFrame {
 
 
             // Run the SJF Scheduler
-            SJF sjfScheduler = new SJF(processes);
-            sjfScheduler.schedule();
-            sjfScheduler.printSchedule();
+            SRTFScheduler srtfScheduler = new SRTFScheduler();
+            srtfScheduler.schedule(processes.toArray(new Process[0]));
             // Generate Gantt Chart
-            generateGanttChart(sjfScheduler.RESULT);
+            generateGanttChart( srtfScheduler.RESULT);
 
             // Display the scheduler output
             outputArea.append("\nScheduler Output:\n");

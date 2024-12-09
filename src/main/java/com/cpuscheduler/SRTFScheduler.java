@@ -2,7 +2,10 @@ package com.cpuscheduler;
 import java.util.*;
 
 public class SRTFScheduler {
+    public ArrayList<Process>RESULT = new ArrayList<>();
     public void schedule(Process[] processes) {
+
+
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter context switching if any: ");
         int contextSwitching = sc.nextInt();
@@ -47,6 +50,7 @@ public class SRTFScheduler {
                 currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
                 currentTime += contextSwitching;
                 scheduledProcesses.add(currentProcess);
+                RESULT.add(currentProcess);
                 completedProcesses++;
             } else {
                 // Re-add the process to the ready queue if it's not finished

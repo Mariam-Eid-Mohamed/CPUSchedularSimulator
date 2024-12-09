@@ -1,6 +1,6 @@
 package com.cpuscheduler;
 import java.util.*;
-//               input example 
+//               input example
 // List<FCAIProcess> processes = new ArrayList<>(Arrays.asList(
 //             new FCAIProcess("P1", "R",17, 0, 4, 4),
 //             new FCAIProcess("P2", "R",6, 3, 9, 3),
