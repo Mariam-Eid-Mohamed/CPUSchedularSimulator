@@ -69,9 +69,6 @@ public class SJF {
                     process.getTurnaroundTime(),
                     process.getWaitingTime()
             );
-
-            totalWaitingTime += process.getWaitingTime();
-            totalTurnaroundTime += process.getTurnaroundTime();
         }
 
         System.out.printf("\nAverage Waiting Time: %.2f\n", totalWaitingTime / processes.size());
