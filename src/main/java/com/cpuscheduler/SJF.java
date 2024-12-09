@@ -7,6 +7,7 @@ import java.util.List;
 public class SJF {
 
     private final List<Process> processes;
+    public ArrayList<Process>RESULT = new ArrayList<>();
 
     public SJF(List<Process> processes) {
         this.processes = processes;
@@ -37,7 +38,7 @@ public class SJF {
                 nextProcess.setTurnaroundTime(currentTime - nextProcess.getArrivalTime());
                 nextProcess.setWaitingTime(nextProcess.getTurnaroundTime() - nextProcess.getBurstTime());
                 nextProcess.setScheduled(true);
-
+                RESULT.add(nextProcess);
                 completed++;
             } else {
                 // If no process is ready, advance the time
@@ -76,5 +77,8 @@ public class SJF {
 
         System.out.printf("\nAverage Waiting Time: %.2f\n", totalWaitingTime / processes.size());
         System.out.printf("Average Turnaround Time: %.2f\n", totalTurnaroundTime / processes.size());
+        for (Process process : RESULT) {
+            System.out.println(process.getName());
+        }
     }
 }

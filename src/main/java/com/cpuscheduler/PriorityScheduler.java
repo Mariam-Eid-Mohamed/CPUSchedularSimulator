@@ -11,8 +11,11 @@ import java.util.*;
 //   Execute the process to completion (non-preemptive).
 //4.Repeat until all processes are executed.
 public class PriorityScheduler {
+    public ArrayList<Process>RESULT = new ArrayList<>();
 
     public void schedule (Process[] processes){
+
+        boolean isFirstProcess = true; // Add this variable at the start of the method
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter context switching if any: ");
         int contextSwitching = sc.nextInt();
@@ -39,14 +42,22 @@ public class PriorityScheduler {
             //poll one with the highest priority
             Process currentProcess = readyQueue.poll();
             // Set start time and calculate completion time
+
             currentProcess.setStartTime(currentTime);
             currentTime += currentProcess.getBurstTime(); // Process execution time
             currentProcess.setCompletionTime(currentTime);
             // Calculate Turnaround Time (TAT) and Waiting Time (WT)
             currentProcess.setTurnaroundTime((currentProcess.getCompletionTime() + contextSwitching) - currentProcess.getArrivalTime());
-            currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
+            // Special case: Adjust WT calculation for the first handled process
+            if (isFirstProcess) {
+                currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - contextSwitching - currentProcess.getBurstTime());
+                isFirstProcess = false; // Reset flag after handling the first process
+            } else {
+                currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
+            }
             currentTime += contextSwitching;
             scheduledProcesses.add(currentProcess);
+            RESULT.add(currentProcess);
             CompletedProcess++;
 
 
@@ -76,6 +87,9 @@ public class PriorityScheduler {
 
         System.out.printf("\nAverage Waiting Time : %.2f\n", averageWaitingTime);
         System.out.printf("Average Turnaround Time : %.2f\n", averageTurnaroundTime);
+       for (Process process : RESULT) {
+           System.out.println(process.getName());
+       }
 
 
 
