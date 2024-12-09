@@ -48,13 +48,10 @@ public class PriorityScheduler {
             currentProcess.setCompletionTime(currentTime);
             // Calculate Turnaround Time (TAT) and Waiting Time (WT)
             currentProcess.setTurnaroundTime((currentProcess.getCompletionTime() + contextSwitching) - currentProcess.getArrivalTime());
-            // Special case: Adjust WT calculation for the first handled process
-            if (isFirstProcess) {
-                currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - contextSwitching - currentProcess.getBurstTime());
-                isFirstProcess = false; // Reset flag after handling the first process
-            } else {
-                currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
-            }
+
+
+           currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
+
             currentTime += contextSwitching;
             scheduledProcesses.add(currentProcess);
             RESULT.add(currentProcess);

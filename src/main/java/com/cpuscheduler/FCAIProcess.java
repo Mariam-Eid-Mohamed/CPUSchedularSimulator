@@ -6,7 +6,7 @@ public class FCAIProcess extends Process {
     public int prvFCAIFactor;
     public int prvQuantum;
     public boolean isCompleted = false;
-    public FCAIProcess(String name, String color,int burstTime, int arrivalTime, int priority, int quantum) {
+    public FCAIProcess(String name, String color,int arrivalTime ,int burstTime, int priority, int quantum) {
         super(name, color,arrivalTime, burstTime, priority); // Call to superclass constructor
         this.quantum = quantum;
         this.FCAIFactor = 0; // Initialize FCAIFactor to a default value

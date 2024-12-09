@@ -13,6 +13,7 @@ public class FCAIScheduler {
     private final List<FCAIProcess> processes;
     private final List<FCAIProcess> completedProcesses = new ArrayList<>();
 
+
     private FCAIProcess tempP = null;
     private double V1, V2;
     private final PriorityQueue<FCAIProcess> readyQueue = new PriorityQueue<>(
@@ -79,6 +80,7 @@ public class FCAIScheduler {
 
             curProcess = readyQueue.poll();
             if (curProcess == null) break;
+
             if (tempP != null && !tempP.isCompleted) {
                 readyQueue.add(tempP);
                 tempP = null;
