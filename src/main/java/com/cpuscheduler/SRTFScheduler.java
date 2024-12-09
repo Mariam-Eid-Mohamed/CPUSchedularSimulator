@@ -18,8 +18,13 @@ public class SRTFScheduler {
                 .thenComparingInt(Process::getArrivalTime));
 
         ArrayList<Process> scheduledProcesses = new ArrayList<>();
+        List<String> contextSwitchLog = new ArrayList<>();
+
         int currentTime = 0;
         int completedProcesses = 0;
+
+        int previousTime = 0;
+        Process previousProcess = null;
 
         while (completedProcesses < processes.length) {
             // Add all processes that have arrived at the current time to the ready queue
@@ -39,6 +44,16 @@ public class SRTFScheduler {
             // Poll the process with the shortest remaining time
             Process currentProcess = readyQueue.poll();
 
+            if(previousProcess != null && previousProcess != currentProcess){
+                contextSwitchLog.add("Process: " + previousProcess.getName() + " started at time " + previousTime);
+                contextSwitchLog.add("Process: " + previousProcess.getName() + " was switched at time " + currentTime);
+                previousTime = currentTime;
+            }
+
+            if (currentProcess.getStartTime() == -1) {
+                currentProcess.setStartTime(currentTime);
+            }
+
             // Execute the process for one time unit
             currentProcess.setRemainingBurstTime(currentProcess.getRemainingBurstTime() - 1);
             currentTime++;
@@ -52,11 +67,20 @@ public class SRTFScheduler {
                 scheduledProcesses.add(currentProcess);
                 RESULT.add(currentProcess);
                 completedProcesses++;
+
+                contextSwitchLog.add("Process: " + currentProcess.getName() + " started at time " + previousTime);
+                contextSwitchLog.add("Process: " + currentProcess.getName() + " finished at time " + currentTime);
+                previousTime = currentTime;
+                currentProcess = null;
             } else {
                 // Re-add the process to the ready queue if it's not finished
                 readyQueue.add(currentProcess);
             }
+
+            previousProcess = currentProcess;
         }
+
+        displayContextSwitchLog(contextSwitchLog);
 
         // Display results
         displayResults(scheduledProcesses);
@@ -85,5 +109,12 @@ public class SRTFScheduler {
 
         System.out.printf("\nAverage Waiting Time: %.2f\n", averageWaitingTime);
         System.out.printf("Average Turnaround Time: %.2f\n", averageTurnaroundTime);
+    }
+
+    private void displayContextSwitchLog(List<String> contextSwitchLog) {
+        System.out.println("\nContext Switch Log:");
+        for (String logState : contextSwitchLog) {
+            System.out.println(logState);
+        }
     }
 }
