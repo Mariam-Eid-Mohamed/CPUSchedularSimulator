@@ -3,12 +3,12 @@ package com.cpuscheduler;
 public class Process {
     private final String name;
     private final String color;
-    private int arrivalTime = -1;
+    private final int arrivalTime;
     private final int burstTime;
     private final int priority;
     private int remainingBurstTime;
     private int completionTime;
-    private int startTime;
+    private int startTime = -1;
     private int waitingTime;
     private int turnaroundTime;
     private boolean isScheduled = false;
